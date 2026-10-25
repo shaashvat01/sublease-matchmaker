@@ -21,11 +21,6 @@ links.addEventListener("click", (e) => {
   if (e.target.closest("a")) { toggle.setAttribute("aria-expanded", "false"); links.classList.remove("open"); }
 });
 
-// Placeholder links (the Discord invite) shouldn't jump to the top.
-$$('[data-placeholder="discord-invite"]').forEach((a) => a.addEventListener("click", (e) => {
-  if (a.getAttribute("href") === "#") e.preventDefault();
-}));
-
 // ---- reveal on scroll ----
 const io = new IntersectionObserver((entries) => entries.forEach((en) => {
   if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
