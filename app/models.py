@@ -13,6 +13,7 @@ class Leaver(BaseModel):
 
     id: str
     discord_id: Optional[int] = None
+    guild_id: Optional[int] = None  # the server this listing belongs to; None = shown in every server
     name: str
     neighborhood: str
     address: str  # private until both say "deal"
@@ -37,6 +38,7 @@ class Seeker(BaseModel):
 
     id: str
     discord_id: Optional[int] = None
+    guild_id: Optional[int] = None  # the server they searched from
     name: str
     office_name: str
     office_lat: float

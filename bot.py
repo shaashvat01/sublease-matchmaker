@@ -1,7 +1,10 @@
 """Discord bot: each student's DMs are their private agent; the server shows listings, the negotiation log and
 private match threads.
 
-    .venv/bin/python bot.py      # needs DISCORD_TOKEN and GUILD_ID in .env
+    .venv/bin/python bot.py      # needs DISCORD_TOKEN in .env
+
+Works in any server it is added to: each server gets its own #listings, #negotiation-log and #matches, and
+students are matched with listings from their own server plus the shared starter listings.
 """
 
 from __future__ import annotations
@@ -19,22 +22,41 @@ from app.models import Leaver, Seeker, Turn
 from app.negotiation import negotiate
 
 load_dotenv()
-GUILD = discord.Object(id=int(os.environ["GUILD_ID"]))
+HOME = int(os.environ["GUILD_ID"]) if os.environ.get("GUILD_ID") else None  # optional: the original test server
 CHANNELS = ("listings", "negotiation-log", "matches")
 BLUE, GREEN, RED = 0x0A84FF, 0x30D158, 0xFF453A
 
 intents = discord.Intents.default()  # DMs carry message content without the privileged intent
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
-sessions: dict[int, intake.Intake] = {}  # discord user id -> intake conversation in progress
+sessions: dict[int, dict] = {}  # discord user id -> {"intake": conversation in progress, "guild": server id}
 
 
 # ---------- helpers ----------
 
-async def channel(name: str) -> discord.TextChannel:
-    guild = client.get_guild(GUILD.id)
+async def channel(guild_id: int, name: str) -> discord.TextChannel:
+    guild = client.get_guild(guild_id)
     found = discord.utils.get(guild.text_channels, name=name)
     return found or await guild.create_text_channel(name)
+
+
+def server_of(*profiles) -> int | None:
+    """The server a negotiation lives in: the seeker's, else the leaver's, else the home server."""
+    for p in profiles:
+        if p.guild_id and client.get_guild(p.guild_id):
+            return p.guild_id
+    return HOME if HOME and client.get_guild(HOME) else (client.guilds[0].id if client.guilds else None)
+
+
+async def mutual_server(uid: int) -> int | None:
+    """A server this user shares with the bot, for students who DM before using /sublease."""
+    for g in client.guilds:
+        try:
+            await g.fetch_member(uid)
+            return g.id
+        except discord.HTTPException:
+            continue
+    return None
 
 
 async def dm(discord_id: int | None, *args, **kwargs):
@@ -95,17 +117,22 @@ class ConfirmProfile(discord.ui.View):
             point = await asyncio.to_thread(intake.geocode, r.leaver.address)
             if not point:
                 return await interaction.followup.send("I couldn't find that address on the map. Can you send it with the city and state?")
-            p = Leaver(id=store.new_id("L"), discord_id=uid, lat=point[0], lng=point[1], **r.leaver.model_dump())
+            guild = sessions.get(uid, {}).get("guild")
+            p = Leaver(id=store.new_id("L"), discord_id=uid, guild_id=guild, lat=point[0], lng=point[1], **r.leaver.model_dump())
+            store.replace_profiles_of(uid)
             store.save_profile(p)
             sessions.pop(uid, None)
-            await (await channel("listings")).send(embed=card_embed(p))
+            if server_of(p):
+                await (await channel(server_of(p), "listings")).send(embed=card_embed(p))
             await interaction.followup.send("You're listed 🎉 Only the neighborhood, dates and asking rent are public. "
                                             "I'll message you when a student's agent wants to negotiate.")
         else:
             point = await asyncio.to_thread(intake.geocode, r.seeker.office_name)
             if not point:
                 return await interaction.followup.send("I couldn't find that office on the map. Can you send its street address?")
-            p = Seeker(id=store.new_id("S"), discord_id=uid, office_lat=point[0], office_lng=point[1], **r.seeker.model_dump())
+            guild = sessions.get(uid, {}).get("guild")
+            p = Seeker(id=store.new_id("S"), discord_id=uid, guild_id=guild, office_lat=point[0], office_lng=point[1], **r.seeker.model_dump())
+            store.replace_profiles_of(uid)
             store.save_profile(p)
             sessions.pop(uid, None)
             await show_matches(interaction.user, p)
@@ -117,7 +144,7 @@ class ConfirmProfile(discord.ui.View):
 
 
 async def show_matches(user: discord.abc.User, seeker: Seeker):
-    ranked = await asyncio.to_thread(matching.rank, store.leavers(), seeker)
+    ranked = await asyncio.to_thread(matching.rank, store.leavers(seeker.guild_id), seeker)
     if not ranked:
         return await user.send("No listings fit your dates and budget yet. I'll keep looking and message you when one does.")
     await user.send(f"Here are your best matches, {seeker.name}. Pick one and my agent will negotiate for you. "
@@ -173,7 +200,7 @@ async def run_negotiation(nid: str):
     row = store.negotiation(nid)
     leaver, seeker = store.profile(row["leaver_id"]), store.profile(row["seeker_id"])
     card = matching.make_card(leaver, verified=store.is_verified(leaver.id))
-    log = await channel("negotiation-log")
+    log = await channel(server_of(seeker, leaver), "negotiation-log")
     await log.send(f"━━━━━━━━━━\n**New negotiation** · {card.room_type} in {card.neighborhood} · listed "
                    f"{card.available} at ${card.rent}/mo")
     loop = asyncio.get_running_loop()
@@ -226,7 +253,8 @@ class ConfirmDeal(discord.ui.View):
 async def open_match_thread(nid: str):
     row = store.negotiation(nid)
     leaver, seeker, deal = store.profile(row["leaver_id"]), store.profile(row["seeker_id"]), store.deal_of(row)
-    matches = await channel("matches")
+    guild = server_of(seeker, leaver)
+    matches = await channel(guild, "matches")
     thread = await matches.create_thread(name=f"Sublease · {leaver.neighborhood}"[:90],
                                          type=discord.ChannelType.private_thread, invitable=False)
     for uid in (leaver.discord_id, seeker.discord_id):
@@ -242,16 +270,22 @@ async def open_match_thread(nid: str):
         e.add_field(name="Roommates", value="The roommates need to meet and approve before it's final.", inline=False)
     await thread.send(f"{people} your agents agreed and you both confirmed. Only you two can see this thread.", embed=e)
     await thread.send(CHECKLIST)
-    await (await channel("negotiation-log")).send("✅ Both students confirmed. A private thread is open for them.")
+    await (await channel(guild, "negotiation-log")).send("✅ Both students confirmed. A private thread is open for them.")
 
 
-async def post_listings():
-    """Refresh #listings so it shows exactly the current listings."""
-    listings = await channel("listings")
-    async for msg in listings.history(limit=200):
-        if msg.author == client.user:
-            await msg.delete()
-    for l in store.leavers():
+async def setup_server(guild: discord.Guild):
+    """Create the channels if needed and refresh #listings with what this server can see."""
+    for name in CHANNELS:
+        await channel(guild.id, name)
+    listings = await channel(guild.id, "listings")
+    posted = [m async for m in listings.history(limit=200) if m.author == client.user]
+    wanted = store.leavers(guild.id)
+    shown = {m.embeds[0].title for m in posted if m.embeds}
+    if len(posted) == len(wanted) and shown == {card_embed(l).title for l in wanted}:
+        return  # already up to date
+    for msg in posted:
+        await msg.delete()
+    for l in wanted:
         await listings.send(embed=card_embed(l))
 
 
@@ -266,12 +300,14 @@ async def on_message(message: discord.Message):
         sessions.pop(uid, None)
         return await message.channel.send("Fresh start. Are you leaving a place, or arriving and looking for one?")
     existing = store.profile_of(uid)
+    if not existing and uid not in sessions:
+        sessions[uid] = {"intake": intake.Intake(), "guild": await mutual_server(uid)}
     if existing and uid not in sessions:
         if isinstance(existing, Seeker) and "match" in text.lower():
             return await show_matches(message.author, existing)
         return await message.channel.send("You already have a profile. Say **matches** to see listings again, "
                                           "or **reset** to start over.")
-    session = sessions.setdefault(uid, intake.Intake())
+    session = sessions[uid]["intake"]
     async with message.channel.typing():
         reply = await asyncio.to_thread(session.chat, text)
     if reply.done and (reply.leaver or reply.seeker):
@@ -280,8 +316,10 @@ async def on_message(message: discord.Message):
         await message.channel.send(reply.reply)
 
 
-@tree.command(name="sublease", description="Start talking to your private sublease agent (in DMs)", guild=GUILD)
+@tree.command(name="sublease", description="Start talking to your private sublease agent (in DMs)")
+@app_commands.guild_only()
 async def sublease(interaction: discord.Interaction):
+    sessions[interaction.user.id] = {"intake": intake.Intake(), "guild": interaction.guild_id}
     await dm(interaction.user.id, "Hi! I'm your private sublease agent. Are you **leaving** a place this summer, "
                                   "or **arriving** and looking for one?")
     await interaction.response.send_message("Check your DMs 👋", ephemeral=True)
@@ -289,13 +327,20 @@ async def sublease(interaction: discord.Interaction):
 
 @client.event
 async def on_ready():
-    for name in CHANNELS:
-        await channel(name)
     if not store.leavers():
         store.seed(Path(__file__).parent / "data" / "listings.json")
-    await post_listings()
-    await tree.sync(guild=GUILD)
-    print(f"Ready as {client.user} in guild {GUILD.id}")
+    for guild in client.guilds:
+        await setup_server(guild)
+    if HOME:  # remove the old server-only copy of /sublease so it doesn't show twice there
+        tree.clear_commands(guild=discord.Object(id=HOME))
+        await tree.sync(guild=discord.Object(id=HOME))
+    await tree.sync()  # global: /sublease in every server
+    print(f"Ready as {client.user} in {len(client.guilds)} server(s)")
+
+
+@client.event
+async def on_guild_join(guild: discord.Guild):
+    await setup_server(guild)
 
 
 if __name__ == "__main__":

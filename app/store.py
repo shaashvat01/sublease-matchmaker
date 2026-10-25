@@ -30,6 +30,12 @@ def save_profile(p: Leaver | Seeker, verified: bool = False) -> None:
         c.execute("INSERT OR REPLACE INTO profiles VALUES (?,?,?,?,?)", (p.id, p.discord_id, role, p.model_dump_json(), int(verified)))
 
 
+def replace_profiles_of(discord_id: int) -> None:
+    """A student has one profile: drop the old one before saving a new one."""
+    with db() as c:
+        c.execute("DELETE FROM profiles WHERE discord_id=?", (discord_id,))
+
+
 def profile(pid: str) -> Optional[Leaver | Seeker]:
     row = db().execute("SELECT role, data FROM profiles WHERE id=?", (pid,)).fetchone()
     if not row:
@@ -47,9 +53,11 @@ def is_verified(pid: str) -> bool:
     return bool(row and row["verified"])
 
 
-def leavers() -> list[Leaver]:
+def leavers(guild_id: Optional[int] = None) -> list[Leaver]:
+    """Listings visible in one server: its own, plus the shared starter listings (no server)."""
     rows = db().execute("SELECT data FROM profiles WHERE role='leaver'").fetchall()
-    return [Leaver.model_validate_json(r["data"]) for r in rows]
+    found = [Leaver.model_validate_json(r["data"]) for r in rows]
+    return [l for l in found if l.guild_id in (None, guild_id)]
 
 
 def new_negotiation(leaver_id: str, seeker_id: str) -> str:

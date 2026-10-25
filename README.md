@@ -48,14 +48,15 @@ model says:
 ## Run it
 ```bash
 uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -r requirements.txt
-cp .env.example .env              # fill in DISCORD_TOKEN and GUILD_ID
+cp .env.example .env              # fill in DISCORD_TOKEN
 .venv/bin/python -m pytest -q     # referee tests
 .venv/bin/python sim.py           # a negotiation in the terminal, no Discord needed
 .venv/bin/python bot.py           # the Discord bot
 ```
 AWS credentials with Bedrock access to Claude Sonnet 5.5 in `us-east-1` are required.
 
-In Discord, `/sublease` opens your private agent in DMs.
+Add the bot to any server and it sets up `#listings`, `#negotiation-log` and `#matches` there. In Discord,
+`/sublease` opens your private agent in DMs. Students are matched with listings from their own server.
 
 ## Safety
 - No money moves through the bot.
