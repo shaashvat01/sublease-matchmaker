@@ -1,0 +1,336 @@
+{
+ "leavers": [
+  {
+   "id": "L1",
+   "name": "Jordan",
+   "neighborhood": "University & Rural, Tempe",
+   "address": "1000 E University Dr, Apt 214, Tempe, AZ",
+   "zip": "85281",
+   "lat": 33.4219,
+   "lng": -111.9264,
+   "available_from": "2027-05-20",
+   "available_to": "2027-08-10",
+   "flex_days": 10,
+   "asking_rent": 850,
+   "floor_rent": 750,
+   "deposit": 400,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room in a 3BR",
+   "house_rules": [
+    "no smoking",
+    "quiet after 11pm"
+   ],
+   "roommate_approval": true
+  },
+  {
+   "id": "L2",
+   "name": "Sam",
+   "neighborhood": "Mill Ave, Tempe",
+   "address": "600 S Mill Ave, Unit 9, Tempe, AZ",
+   "zip": "85281",
+   "lat": 33.4255,
+   "lng": -111.94,
+   "available_from": "2027-06-01",
+   "available_to": "2027-07-31",
+   "flex_days": 0,
+   "asking_rent": 1100,
+   "floor_rent": 1000,
+   "deposit": 800,
+   "utilities_included": false,
+   "furnished": true,
+   "room_type": "studio",
+   "house_rules": [
+    "no pets"
+   ],
+   "roommate_approval": false
+  },
+  {
+   "id": "L3",
+   "name": "Riley",
+   "neighborhood": "West Mesa",
+   "address": "200 N Dobson Rd, Mesa, AZ",
+   "zip": "85201",
+   "lat": 33.4152,
+   "lng": -111.8315,
+   "available_from": "2027-06-01",
+   "available_to": "2027-08-20",
+   "flex_days": 7,
+   "asking_rent": 700,
+   "floor_rent": 650,
+   "deposit": 300,
+   "utilities_included": true,
+   "furnished": false,
+   "room_type": "private room in a 4BR",
+   "house_rules": [],
+   "roommate_approval": false
+  },
+  {
+   "id": "L4",
+   "name": "Taylor",
+   "neighborhood": "Apache Blvd, Tempe",
+   "address": "1255 E Apache Blvd, Apt 3108, Tempe, AZ",
+   "zip": "85281",
+   "lat": 33.4148,
+   "lng": -111.915,
+   "available_from": "2027-05-15",
+   "available_to": "2027-08-15",
+   "flex_days": 7,
+   "asking_rent": 780,
+   "floor_rent": 700,
+   "deposit": 350,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room in a 4BR",
+   "house_rules": [
+    "no smoking",
+    "no overnight guests on weeknights"
+   ],
+   "roommate_approval": true
+  },
+  {
+   "id": "L5",
+   "name": "Morgan",
+   "neighborhood": "Tempe Marketplace",
+   "address": "2000 E Rio Salado Pkwy, Unit 1412, Tempe, AZ",
+   "zip": "85281",
+   "lat": 33.43,
+   "lng": -111.9,
+   "available_from": "2027-06-01",
+   "available_to": "2027-08-31",
+   "flex_days": 5,
+   "asking_rent": 1250,
+   "floor_rent": 1150,
+   "deposit": 1000,
+   "utilities_included": false,
+   "furnished": true,
+   "room_type": "1BR apartment",
+   "house_rules": [
+    "no smoking",
+    "cats ok"
+   ],
+   "roommate_approval": false
+  },
+  {
+   "id": "L6",
+   "name": "Casey",
+   "neighborhood": "Roosevelt Row, Phoenix",
+   "address": "1001 N 3rd Ave, Apt 607, Phoenix, AZ",
+   "zip": "85003",
+   "lat": 33.4589,
+   "lng": -112.0661,
+   "available_from": "2027-05-25",
+   "available_to": "2027-08-20",
+   "flex_days": 10,
+   "asking_rent": 950,
+   "floor_rent": 850,
+   "deposit": 500,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room in a 2BR",
+   "house_rules": [
+    "quiet after 10pm"
+   ],
+   "roommate_approval": true
+  },
+  {
+   "id": "L7",
+   "name": "Jamie",
+   "neighborhood": "Midtown Phoenix",
+   "address": "3131 N Central Ave, Unit 1904, Phoenix, AZ",
+   "zip": "85012",
+   "lat": 33.488,
+   "lng": -112.074,
+   "available_from": "2027-06-01",
+   "available_to": "2027-08-10",
+   "flex_days": 3,
+   "asking_rent": 1400,
+   "floor_rent": 1300,
+   "deposit": 1200,
+   "utilities_included": false,
+   "furnished": true,
+   "room_type": "studio",
+   "house_rules": [
+    "no pets"
+   ],
+   "roommate_approval": false
+  },
+  {
+   "id": "L8",
+   "name": "Avery",
+   "neighborhood": "Old Town Scottsdale",
+   "address": "4301 N Scottsdale Rd, Apt 220, Scottsdale, AZ",
+   "zip": "85251",
+   "lat": 33.4942,
+   "lng": -111.9261,
+   "available_from": "2027-05-20",
+   "available_to": "2027-08-15",
+   "flex_days": 7,
+   "asking_rent": 1050,
+   "floor_rent": 950,
+   "deposit": 600,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room in a 2BR",
+   "house_rules": [
+    "no smoking",
+    "no parties"
+   ],
+   "roommate_approval": true
+  },
+  {
+   "id": "L9",
+   "name": "Drew",
+   "neighborhood": "Downtown Chandler",
+   "address": "45 S Arizona Ave, Apt 310, Chandler, AZ",
+   "zip": "85225",
+   "lat": 33.3036,
+   "lng": -111.8413,
+   "available_from": "2027-06-01",
+   "available_to": "2027-08-31",
+   "flex_days": 14,
+   "asking_rent": 720,
+   "floor_rent": 640,
+   "deposit": 300,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room in a 3BR",
+   "house_rules": [
+    "dog in the house"
+   ],
+   "roommate_approval": true
+  },
+  {
+   "id": "L10",
+   "name": "Quinn",
+   "neighborhood": "Heritage District, Gilbert",
+   "address": "150 N Gilbert Rd, Unit 12, Gilbert, AZ",
+   "zip": "85234",
+   "lat": 33.3528,
+   "lng": -111.789,
+   "available_from": "2027-05-28",
+   "available_to": "2027-08-28",
+   "flex_days": 7,
+   "asking_rent": 690,
+   "floor_rent": 620,
+   "deposit": 300,
+   "utilities_included": true,
+   "furnished": false,
+   "room_type": "private room in a townhouse",
+   "house_rules": [
+    "no smoking"
+   ],
+   "roommate_approval": false
+  },
+  {
+   "id": "L11",
+   "name": "Reese",
+   "neighborhood": "Arcadia, Phoenix",
+   "address": "4500 E Indian School Rd, Apt 118, Phoenix, AZ",
+   "zip": "85018",
+   "lat": 33.495,
+   "lng": -111.98,
+   "available_from": "2027-06-05",
+   "available_to": "2027-08-25",
+   "flex_days": 5,
+   "asking_rent": 1100,
+   "floor_rent": 1000,
+   "deposit": 700,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room with own bathroom",
+   "house_rules": [
+    "no smoking",
+    "quiet after 11pm"
+   ],
+   "roommate_approval": true
+  },
+  {
+   "id": "L12",
+   "name": "Parker",
+   "neighborhood": "South Tempe",
+   "address": "1900 E Elliot Rd, Apt 2046, Tempe, AZ",
+   "zip": "85284",
+   "lat": 33.349,
+   "lng": -111.93,
+   "available_from": "2027-05-15",
+   "available_to": "2027-07-31",
+   "flex_days": 10,
+   "asking_rent": 800,
+   "floor_rent": 720,
+   "deposit": 400,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room in a 3BR",
+   "house_rules": [
+    "no pets"
+   ],
+   "roommate_approval": true
+  },
+  {
+   "id": "L13",
+   "name": "Rowan",
+   "neighborhood": "Mill Ave, Tempe",
+   "address": "400 S Mill Ave, Unit 702, Tempe, AZ",
+   "zip": "85281",
+   "lat": 33.427,
+   "lng": -111.9399,
+   "available_from": "2027-06-01",
+   "available_to": "2027-08-15",
+   "flex_days": 0,
+   "asking_rent": 1350,
+   "floor_rent": 1250,
+   "deposit": 900,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "1BR apartment",
+   "house_rules": [
+    "no smoking"
+   ],
+   "roommate_approval": false
+  },
+  {
+   "id": "L14",
+   "name": "Emerson",
+   "neighborhood": "University & McClintock, Tempe",
+   "address": "1700 E University Dr, Apt 136, Tempe, AZ",
+   "zip": "85281",
+   "lat": 33.4217,
+   "lng": -111.9101,
+   "available_from": "2027-05-18",
+   "available_to": "2027-08-18",
+   "flex_days": 10,
+   "asking_rent": 750,
+   "floor_rent": 680,
+   "deposit": 350,
+   "utilities_included": true,
+   "furnished": true,
+   "room_type": "private room in a 4BR",
+   "house_rules": [
+    "no smoking",
+    "shared kitchen chores"
+   ],
+   "roommate_approval": true
+  }
+ ],
+ "seekers": [
+  {
+   "id": "S1",
+   "name": "Alex",
+   "office_name": "a summer internship office by Tempe Town Lake",
+   "office_lat": 33.4302,
+   "office_lng": -111.9342,
+   "need_from": "2027-06-01",
+   "need_to": "2027-08-15",
+   "flex_days": 5,
+   "target_rent": 800,
+   "max_rent": 900,
+   "must_haves": [
+    "furnished"
+   ],
+   "deal_breakers": [
+    "smoking"
+   ]
+  }
+ ]
+}
