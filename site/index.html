@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sublease Matchmaker: your agent finds the sublease, then negotiates it</title>
+  <meta name="description" content="Personal AI agents on Discord that match students leaving and arriving for the summer, negotiate the sublease inside each student's private limits, and introduce them only when both say yes." />
+  <meta name="theme-color" content="#F6F8F9" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" id="nav">
+    <div class="wrap nav-row">
+      <a class="brand" href="#top" aria-label="Sublease Matchmaker, home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="2" y="2" width="28" height="28" rx="8" fill="#12161C"/>
+          <path d="M9 15.5 16 10l7 5.5V23a1 1 0 0 1-1 1h-4v-5h-4v5h-4a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="23.5" cy="9" r="3" fill="#E9A23B"/>
+        </svg>
+        <span>Sublease Matchmaker</span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">
+        <span class="sr-only">Menu</span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <nav id="nav-links" class="nav-links" aria-label="Main">
+        <a href="#how">How it works</a>
+        <a href="#negotiate">Watch it negotiate</a>
+        <a href="#demo">Demo</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#safety">Safety</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn btn-discord btn-sm" href="#" data-placeholder="discord-invite">Add to Discord</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <svg class="floorplan" viewBox="0 0 1200 700" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M80 80h420v260H80zM500 80h300v180H500zM800 80h320v320H800zM80 340h260v280H80zM340 340h460v280H340zM800 400h320v220H800z"/>
+          <path d="M250 340v-40M500 200h-40M800 180h40M340 480h-40M640 340v40M960 400v-40" stroke-width="6" stroke="var(--bg)"/>
+          <path d="M120 120h120v60H120zM860 140h80v120h-80zM400 520h160v60H400z" stroke-dasharray="6 8"/>
+          <path d="M500 80a40 40 0 0 1 40 40M800 400a40 40 0 0 0 40-40" />
+        </g>
+      </svg>
+      <div class="wrap hero-grid">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span class="dot dot-sun"></span>For students leaving <span class="amp">&amp;</span> <span class="dot dot-pool"></span>students arriving this summer</p>
+          <h1>Your agent finds the sublease. <span class="h1-soft">Then it negotiates for you.</span></h1>
+          <p class="lede">Tell your private agent on Discord what you have or what you need. It matches you by dates, budget and commute, bargains with the other student's agent inside your limits, and introduces you only when you both say yes.</p>
+          <div class="cta-row">
+            <a class="btn btn-discord" href="#" data-placeholder="discord-invite">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.3 5.3A16.6 16.6 0 0 0 15.2 4l-.5 1a15.4 15.4 0 0 0-5.4 0l-.5-1a16.5 16.5 0 0 0-4.1 1.3C2.1 9.2 1.4 13 1.8 16.7a16.7 16.7 0 0 0 5 2.5l1.1-1.7a10.8 10.8 0 0 1-1.7-.8l.4-.3a11.9 11.9 0 0 0 10.8 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.7a16.6 16.6 0 0 0 5-2.5c.5-4.3-.8-8.1-2.9-11.4ZM8.7 14.5c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+              Add to Discord
+            </a>
+            <a class="btn btn-ghost" href="#negotiate">Watch two agents negotiate</a>
+          </div>
+          <p class="stack-line">Built with <strong>Strands Agents</strong> · <strong>Claude Sonnet 5.5</strong> on <strong>Amazon Bedrock</strong> · <strong>Discord</strong></p>
+        </div>
+
+        <div class="hero-visual reveal" aria-label="An example conversation with the agent">
+          <div class="dm" id="hero-dm">
+            <div class="dm-head">
+              <span class="avatar avatar-bot" aria-hidden="true">SM</span>
+              <div><strong>Sublease Matchmaker</strong><span class="dm-sub">Your private agent · Direct message</span></div>
+            </div>
+            <ol class="dm-body" aria-live="polite">
+              <li class="msg me">hey! I'm coming to Tempe for a summer internship and need a place</li>
+              <li class="msg bot">Nice, congrats on the internship! What's your first name?</li>
+              <li class="msg me">Alex. June 1 to Aug 15, near Tempe Town Lake. Flexible by about 5 days</li>
+              <li class="msg bot">Got it. What monthly rent are you hoping for? And what's the most you could pay? That number stays private.</li>
+              <li class="msg me">around 800, max 900. furnished, no smoking please</li>
+              <li class="msg bot card-msg">
+                <span class="mini-label">Top match · 9 min to your office</span>
+                <strong>Private room in a 3BR · University &amp; Rural, Tempe</strong>
+                <span class="mini-row"><span>May 20 – Aug 10</span><span>$850/mo</span><span>Utilities incl.</span></span>
+                <span class="mini-btn">Let my agent negotiate</span>
+              </li>
+            </ol>
+          </div>
+          <div class="float-chip chip-lock" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 9V7a4 4 0 1 1 8 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="9" width="12" height="8" rx="2" fill="currentColor"/></svg>Your max stays private</div>
+          <div class="float-chip chip-deal" aria-hidden="true">🤝 Deal at $825/mo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="section problem" aria-labelledby="problem-title">
+      <div class="wrap problem-grid">
+        <div class="reveal">
+          <p class="kicker">The problem</p>
+          <h2 id="problem-title">Subleasing is a group-chat lottery.</h2>
+          <p class="section-lede">Every summer, students leaving for internships and students arriving for them end up in the same chaotic thread.</p>
+          <ul class="pains" role="list">
+            <li><button class="pain" data-pain="dates" aria-pressed="false"><span class="p-ico t-sun" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M9 3v4M15 3v4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>The dates never line up.</b><span>You leave May 20. They arrive June 1. Somebody has to work out the prorated rent.</span></span></button></li>
+            <li><button class="pain" data-pain="repeat" aria-pressed="false"><span class="p-ico t-pool" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h12v9H8l-4 3zM20 9v8l-3-2h-7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Everyone asks the same questions.</b><span>Still available? Furnished? Utilities? The same five answers, over and over.</span></span></button></li>
+            <li><button class="pain" data-pain="number" aria-pressed="false"><span class="p-ico t-ref" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M16 7.5C16 5.6 14.2 4.5 12 4.5S8 5.6 8 7.5s1.8 2.7 4 3.2 4 1.4 4 3.3-1.8 3.5-4 3.5-4-1.2-4-3" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Nobody wants to name their number.</b><span>So leavers underprice, seekers overpay, and good matches walk away over $50.</span></span></button></li>
+            <li><button class="pain" data-pain="scam" aria-pressed="false"><span class="p-ico t-red" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 2 20h20zM12 10v4M12 17h.01" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>And then there are the scams.</b><span>"Wire the deposit, I'm abroad." Every season, someone falls for it.</span></span></button></li>
+          </ul>
+        </div>
+        <div class="gc reveal" aria-label="An example sublease group chat full of mismatched dates, repeated questions and a scam">
+          <div class="gc-head">
+            <span class="gc-icon" aria-hidden="true">🏠</span>
+            <div><b>Summer Sublets · Tempe</b><span>Maya, Kev, Priya, Dan and many more</span></div>
+          </div>
+          <div class="gc-feed">
+            <ul class="gc-track" role="list"><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#E9A23B">M</span><div><b>Maya</b><span>anyone subleasing june–aug near campus?? 🙏</span></div></li><li class="gm" data-pain="dates"><span class="gm-av" style="--c:#2BB3AD">K</span><div><b>Kev</b><span>I have a room May 15 – July 31, $900</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#8B7CC8">P</span><div><b>Priya</b><span>is it still available?</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#E07A5F">D</span><div><b>Dan</b><span>furnished? utilities included?</span></div></li><li class="gm" data-pain="dates"><span class="gm-av" style="--c:#2BB3AD">S</span><div><b>Sofia</b><span>my internship is June 2 – Aug 20 😭 nothing fits</span></div></li><li class="gm" data-pain="number"><span class="gm-av" style="--c:#2BB3AD">K</span><div><b>Kev</b><span>what's your budget?</span></div></li><li class="gm" data-pain="number"><span class="gm-av" style="--c:#E9A23B">M</span><div><b>Maya</b><span>what's your lowest?</span></div></li><li class="gm scam" data-pain="scam"><span class="gm-av" style="--c:#B42318">R</span><div><b>Ray</b><span>Wire the $500 deposit today and it's yours. I'm abroad so I can't show it</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#8B7CC8">T</span><div><b>Theo</b><span>still available??</span></div></li><li class="gm" data-pain="number"><span class="gm-av" style="--c:#2BB3AD">K</span><div><b>Kev</b><span>make me an offer</span></div></li><li class="gm" data-pain="dates"><span class="gm-av" style="--c:#E9A23B">J</span><div><b>Jess</b><span>Room in a 4BR, Aug 1 – Dec 15, $700 obo</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#E07A5F">D</span><div><b>Dan</b><span>DM'd you</span></div></li></ul>
+            <ul class="gc-track" role="list" aria-hidden="true"><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#E9A23B">M</span><div><b>Maya</b><span>anyone subleasing june–aug near campus?? 🙏</span></div></li><li class="gm" data-pain="dates"><span class="gm-av" style="--c:#2BB3AD">K</span><div><b>Kev</b><span>I have a room May 15 – July 31, $900</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#8B7CC8">P</span><div><b>Priya</b><span>is it still available?</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#E07A5F">D</span><div><b>Dan</b><span>furnished? utilities included?</span></div></li><li class="gm" data-pain="dates"><span class="gm-av" style="--c:#2BB3AD">S</span><div><b>Sofia</b><span>my internship is June 2 – Aug 20 😭 nothing fits</span></div></li><li class="gm" data-pain="number"><span class="gm-av" style="--c:#2BB3AD">K</span><div><b>Kev</b><span>what's your budget?</span></div></li><li class="gm" data-pain="number"><span class="gm-av" style="--c:#E9A23B">M</span><div><b>Maya</b><span>what's your lowest?</span></div></li><li class="gm scam" data-pain="scam"><span class="gm-av" style="--c:#B42318">R</span><div><b>Ray</b><span>Wire the $500 deposit today and it's yours. I'm abroad so I can't show it</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#8B7CC8">T</span><div><b>Theo</b><span>still available??</span></div></li><li class="gm" data-pain="number"><span class="gm-av" style="--c:#2BB3AD">K</span><div><b>Kev</b><span>make me an offer</span></div></li><li class="gm" data-pain="dates"><span class="gm-av" style="--c:#E9A23B">J</span><div><b>Jess</b><span>Room in a 4BR, Aug 1 – Dec 15, $700 obo</span></div></li><li class="gm" data-pain="repeat"><span class="gm-av" style="--c:#E07A5F">D</span><div><b>Dan</b><span>DM'd you</span></div></li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO MEDIA -->
+    <section class="section demo" id="demo" aria-labelledby="demo-title">
+      <div class="wrap">
+        <p class="kicker">See it in action</p>
+        <h2 id="demo-title">From “I need a place” to a confirmed deal.</h2>
+        <!-- VIDEO: replace the .video-ph div with an <iframe> or <video controls poster="..."> of the demo -->
+        <figure class="video">
+          <div class="video-ph" data-placeholder="demo-video">
+            <span class="play" aria-hidden="true">▶</span>
+            <span class="ph-label">Demo video</span>
+          </div>
+        </figure>
+        <!-- SCREENSHOTS: replace each .shot-ph with <img src="assets/..." alt="..."> -->
+        <div class="shots">
+          <figure><div class="shot-ph" data-placeholder="screenshot-intake"><span class="ph-label">Screenshot · DM with your agent</span></div><figcaption>Tell your agent once</figcaption></figure>
+          <figure><div class="shot-ph" data-placeholder="screenshot-log"><span class="ph-label">Screenshot · #negotiation-log</span></div><figcaption>Watch the agents bargain</figcaption></figure>
+          <figure><div class="shot-ph" data-placeholder="screenshot-thread"><span class="ph-label">Screenshot · private match thread</span></div><figcaption>Meet when you both say yes</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section how" id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <p class="kicker">How it works</p>
+        <h2 id="how-title">One DM. Your agent does the rest.</h2>
+        <div class="how-grid">
+          <ol class="steps">
+            <li class="step is-active" data-step="0">
+              <span class="step-n">1</span>
+              <div><h3>Tell your agent</h3><p>DM the bot in plain words. It asks one question at a time, including your private limit: the lowest rent you'd take, or the most you can pay.</p></div>
+            </li>
+            <li class="step" data-step="1">
+              <span class="step-n">2</span>
+              <div><h3>Get matched</h3><p>Listings are ranked by how much of your dates they cover, how they fit your budget, and minutes to your office.</p></div>
+            </li>
+            <li class="step" data-step="2">
+              <span class="step-n">3</span>
+              <div><h3>Agents negotiate</h3><p>Your agent and theirs trade offers and counters, prorate partial stays and nudge dates. A referee checks every move.</p></div>
+            </li>
+            <li class="step" data-step="3">
+              <span class="step-n">4</span>
+              <div><h3>You both confirm</h3><p>Nothing is final until both students tap <em>Confirm deal</em>. Either of you can walk away and nothing is shared.</p></div>
+            </li>
+            <li class="step" data-step="4">
+              <span class="step-n">5</span>
+              <div><h3>Meet in a private thread</h3><p>Only then do you see names and the full address, in a thread just for the two of you, with a safety checklist.</p></div>
+            </li>
+          </ol>
+          <div class="how-stage" aria-hidden="true">
+            <div class="panel" data-panel="0">
+              <div class="pane-title">Direct message</div>
+              <div class="msg me sun">I'm leaving Tempe May 20 – Aug 10, room in a 3BR, asking $850</div>
+              <div class="msg bot">Got it. What's the lowest you'd accept? Only your agent will know it.</div>
+              <div class="msg me sun">$750</div>
+              <div class="lockline"><span class="lock-ico"></span>Saved as private</div>
+            </div>
+            <div class="panel" data-panel="1">
+              <div class="pane-title">Your best matches</div>
+              <div class="match"><span class="match-score">94</span><div><strong>University &amp; Rural, Tempe</strong><span>9 min · covers 93% of your dates · $850</span></div></div>
+              <div class="match"><span class="match-score">88</span><div><strong>West Mesa</strong><span>37 min · covers 100% · $700</span></div></div>
+              <div class="match"><span class="match-score">82</span><div><strong>Mill Ave, Tempe</strong><span>8 min · covers 80% · $1,100</span></div></div>
+            </div>
+            <div class="panel" data-panel="2">
+              <div class="pane-title">#negotiation-log</div>
+              <div class="logline pool"><b>Arriving student's agent</b> · propose · Jun 1 → Aug 15 · <b>$780</b></div>
+              <div class="logline ref">⚖️ Referee removed a hint about date flexibility</div>
+              <div class="logline sun"><b>Leaving student's agent</b> · counter · <b>$825</b> · deposit $350</div>
+              <div class="logline pool"><b>Arriving student's agent</b> · accept</div>
+            </div>
+            <div class="panel" data-panel="3">
+              <div class="pane-title">Your agent reached a deal</div>
+              <div class="deal-terms">Jun 1 → Aug 15 · <b>$825/mo</b> · ≈ $2,062 total · deposit $350 · utilities included</div>
+              <div class="btn-pair"><span class="fake-btn ok">Confirm deal</span><span class="fake-btn">Decline</span></div>
+              <p class="small">Confirming shares your contact and the full address.</p>
+            </div>
+            <div class="panel" data-panel="4">
+              <div class="pane-title">🔒 Sublease · University &amp; Rural</div>
+              <div class="msg bot">🎉 Alex, meet Jordan. Your agents agreed and you both confirmed. Only you two can see this thread.</div>
+              <ul class="check">
+                <li>Landlord approved the sublease in writing</li>
+                <li>Roommates met and approved</li>
+                <li>Toured before paying anything</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNATURE: NEGOTIATION REPLAY -->
+    <section class="section negotiate" id="negotiate" aria-labelledby="neg-title">
+      <div class="wrap">
+        <p class="kicker">Watch it negotiate</p>
+        <h2 id="neg-title">Two agents. Two private limits. One fair deal.</h2>
+        <p class="section-lede">A replay of a real negotiation between Alex's agent and Jordan's agent. Neither agent ever sees the other's limit. Flip the switch to see what they can't.</p>
+
+        <div class="arena">
+          <div class="arena-top">
+            <div class="legend">
+              <span class="tag tag-sun"><span class="dot dot-sun"></span>Leaving: Jordan's agent</span>
+              <span class="tag tag-pool"><span class="dot dot-pool"></span>Arriving: Alex's agent</span>
+            </div>
+            <div class="controls">
+              <label class="switch">
+                <input type="checkbox" id="reveal-limits" />
+                <span class="track" aria-hidden="true"></span>
+                <span>Show private limits</span>
+              </label>
+              <button class="btn btn-dark btn-sm" id="play">▶ Play negotiation</button>
+            </div>
+          </div>
+
+          <div class="rail-wrap" role="img" aria-label="Rent offers on a scale from $700 to $950. The listing asks $850. Alex's agent offers $780. Jordan's agent counters at $825. Deal at $825.">
+            <div class="rail">
+              <div class="zone" id="zone"><span>Both could accept</span></div>
+              <div class="limit limit-sun" id="lim-floor" style="--x:20%"><span>🔒 Jordan's lowest: $750</span></div>
+              <div class="limit limit-pool" id="lim-max" style="--x:80%"><span>🔒 Alex's max: $900</span></div>
+              <div class="marker m-sun" id="m-sun" style="--x:60%"><span class="m-val">$850</span><span class="m-who">asking</span></div>
+              <div class="marker m-pool" id="m-pool" style="--x:0%"><span class="m-val">—</span><span class="m-who">offer</span></div>
+              <div class="marker m-deal" id="m-deal" style="--x:50%"><span class="m-val">$825</span><span class="m-who">deal</span></div>
+            </div>
+            <div class="ticks"><span>$700</span><span>$750</span><span>$800</span><span>$850</span><span>$900</span><span>$950</span></div>
+          </div>
+
+          <ol class="feed" id="feed" aria-live="polite"></ol>
+          <p class="feed-empty" id="feed-empty">Press <b>Play negotiation</b> to replay it turn by turn.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFEREE -->
+    <section class="section referee" aria-labelledby="ref-title">
+      <div class="wrap ref-grid">
+        <div class="reveal">
+          <p class="kicker">The referee</p>
+          <h2 id="ref-title">A referee reads every message before the other side does.</h2>
+          <p class="section-lede">Agents are persuasive. That's why neither one talks to the other directly.</p>
+          <div class="layers">
+            <div class="layer">
+              <h3>Claude Sonnet referee</h3>
+              <p>Catches indirect hints at a private limit, pressure tactics and anything that would break fair-housing rules, then rewrites the message. When the agents stall, it suggests a compromise that works for both.</p>
+            </div>
+            <div class="layer">
+              <h3>Hard rules in code, underneath</h3>
+              <p>No offer can cross its student's limit, whatever a model says. Private numbers are redacted, out-of-limit accepts are blocked, and rounds are capped.</p>
+            </div>
+          </div>
+        </div>
+        <figure class="beforeafter reveal" aria-label="A message before and after the referee">
+          <div class="ba ba-before">
+            <span class="ba-label">What the agent wrote</span>
+            <p>…at $780/month with utilities included, <mark>and Alex is open to shifting the end date</mark> if that helps.</p>
+          </div>
+          <div class="ba-arrow" aria-hidden="true">↓</div>
+          <div class="ba ba-after">
+            <span class="ba-label">What the other agent saw</span>
+            <p>…at $780/month with utilities included. Alex is happy with the non-smoking rule.</p>
+            <span class="flag">⚖️ removed a hint about date flexibility</span>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- PRIVACY LADDER -->
+    <section class="section privacy" id="privacy" aria-labelledby="priv-title">
+      <div class="wrap">
+        <p class="kicker">Privacy</p>
+        <h2 id="priv-title">You reveal more only as the deal gets real.</h2>
+        <div class="seg" role="tablist" aria-label="Stage of the deal">
+          <button role="tab" aria-selected="true" aria-controls="ladder" data-stage="0">Listed</button>
+          <button role="tab" aria-selected="false" aria-controls="ladder" data-stage="1">Negotiating</button>
+          <button role="tab" aria-selected="false" aria-controls="ladder" data-stage="2">Both confirmed</button>
+        </div>
+        <div class="ladder" id="ladder" data-stage="0" role="tabpanel">
+          <div class="field" data-from="0"><span>Neighborhood</span><b>University &amp; Rural, Tempe</b></div>
+          <div class="field" data-from="0"><span>Dates</span><b>May 20 – Aug 10</b></div>
+          <div class="field" data-from="0"><span>Asking rent</span><b>$850/mo</b></div>
+          <div class="field" data-from="1"><span>Offers &amp; terms</span><b>$825 · deposit $350</b></div>
+          <div class="field" data-from="2"><span>Name</span><b>Jordan</b></div>
+          <div class="field" data-from="2"><span>Full address</span><b>1000 E University Dr, Apt 214</b></div>
+          <div class="field never"><span>Lowest acceptable rent</span><b>Never shared</b></div>
+        </div>
+        <p class="ladder-note" id="ladder-note">Anyone on the server sees the neighborhood, dates and asking rent. No address, no names.</p>
+      </div>
+    </section>
+
+    <!-- SAFETY -->
+    <section class="section safety" id="safety" aria-labelledby="safe-title">
+      <div class="wrap">
+        <p class="kicker">Safety</p>
+        <h2 id="safe-title">Built to keep both students out of trouble.</h2>
+        <div class="bento">
+          <article class="tile t-money reveal">
+            <div class="tile-head"><span class="p-ico t-pool" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h18v10H3zM12 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM4 4l16 16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>No money moves through the bot</h3></div>
+            <p>Agents agree on terms. Paying happens between the two of you, after a tour and a written sublease.</p>
+            <div class="viz viz-money" aria-hidden="true">
+              <span class="who-av sun">J</span>
+              <span class="pay-line"><span class="pay-pill">Pay each other after the tour</span></span>
+              <span class="who-av pool">A</span>
+              <span class="bot-off">Bot never touches money</span>
+            </div>
+          </article>
+          <article class="tile t-fair reveal">
+            <div class="tile-head"><span class="p-ico t-ref" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Fair-housing aware</h3></div>
+            <p>Listings can't filter by race, religion, sex, national origin, disability or family status. Lifestyle rules are fine.</p>
+            <ul class="viz viz-rules" aria-hidden="true">
+              <li class="rule cut"><span>female roommates only</span><em>removed</em></li>
+              <li class="rule keep"><span>no smoking</span><em>kept</em></li>
+              <li class="rule keep"><span>quiet after 11pm</span><em>kept</em></li>
+            </ul>
+          </article>
+          <article class="tile t-scam reveal">
+            <div class="tile-head"><span class="p-ico t-red" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 2 20h20zM12 10v4M12 17h.01" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Scam signs called out</h3></div>
+            <p>Wire, gift card or crypto payments, "I'm abroad", rent far below nearby rents. Every match thread lists them.</p>
+            <div class="viz viz-scam" aria-hidden="true">
+              <div class="scam-bubble">Wire the $500 deposit today, I'm abroad so I can't show it</div>
+              <div class="scam-flags"><span>⚠ wire transfer</span><span>⚠ can't tour</span></div>
+            </div>
+          </article>
+          <article class="tile t-check reveal">
+            <div class="tile-head"><span class="p-ico t-deal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h8M9 2h6v4H9zM6 4H5a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-1M8 12l2.5 2.5L16 9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>A real checklist</h3></div>
+            <p>Every private match thread ends with the steps that protect both of you.</p>
+            <ul class="viz viz-check" aria-hidden="true">
+              <li>Landlord approved in writing</li>
+              <li>Roommates met and said OK</li>
+              <li>Toured before paying</li>
+              <li>Move-in photos taken</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq" id="faq" aria-labelledby="faq-title">
+      <div class="wrap faq-wrap">
+        <div>
+          <p class="kicker">FAQ</p>
+          <h2 id="faq-title">Good questions.</h2>
+        </div>
+        <div class="faq-list">
+          <details><summary>Is my lowest rent or max budget really private?</summary><p>Yes. It lives only with your own agent. The referee checks every message for hints, and code blocks any number that slips through. The other side only ever sees offers.</p></details>
+          <details><summary>Who can see the negotiation?</summary><p>The server sees the moves on <code>#negotiation-log</code> without names or addresses. Your profile and limits stay in your DMs.</p></details>
+          <details><summary>What if our dates only partly overlap?</summary><p>The agents prorate the rent by day and can nudge move-in or move-out within how flexible each of you said you are.</p></details>
+          <details><summary>Can I say no after the agents agree?</summary><p>Always. Nothing is final until both of you tap Confirm, and declining shares nothing.</p></details>
+          <details><summary>Does any money go through the bot?</summary><p>No. You pay each other after touring the place and signing a written sublease.</p></details>
+          <details><summary>Which campuses does it work for?</summary><p>Any campus community on Discord. The first listings are around Tempe, Phoenix, Scottsdale, Mesa, Chandler and Gilbert.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-band" aria-labelledby="cta-title">
+      <div class="wrap cta-inner">
+        <h2 id="cta-title">Leaving or arriving this summer? Let your agent handle it.</h2>
+        <div class="cta-row">
+          <a class="btn btn-discord" href="#" data-placeholder="discord-invite">Add to Discord</a>
+          <a class="btn btn-light" href="https://github.com/shaashvat01/sublease-matchmaker">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap foot-row">
+      <span>Sublease Matchmaker · built by team DOOMbots for the <a href="https://hackathon.cubbie.ai">Cubbie Hackathon</a></span>
+      <a href="https://github.com/shaashvat01/sublease-matchmaker">GitHub</a>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
